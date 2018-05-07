@@ -31,6 +31,12 @@ conditions <- c("UCpl","Cpl","UCm","Cm","UCP","CP")
 for (i in 1:nchar(gsms)) { sml[i] <- conditions[as.integer(substr(gsms,i,i))+1] }
 #for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
 
+annot <- fData(gset)
+annot <- annot[annot$SEQUENCE!="",]
+annot <- subset(annot, select=c("ID","Species.Scientific.Name","SEQUENCE"))
+write.table(annot, file=paste(acc,"_probe_annot.txt",sep=""), row.names=F, col.names=F,sep="\t")
+
+
 # eliminate samples marked as "X"
 sel <- which(sml != "X")
 sml <- sml[sel]

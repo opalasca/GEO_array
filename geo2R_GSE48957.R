@@ -31,6 +31,17 @@ for (i in 1:nchar(gsms)) { sml[i] <- conditions[as.integer(substr(gsms,i,i))+1] 
 #for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
 #sml <- paste("G", sml, sep="")    # set group names
 
+annot <- fData(gset)
+annot <- annot[annot$Sequence!="",]
+annot <- subset(annot, select=c("ID","Species.Scientific.Name","Sequence"))
+write.table(annot, file=paste(acc,"_probe_annot.txt",sep=""), row.names=F, col.names=F,sep="\t")
+
+#remove control probes and other probes not of interest
+fData(gset)<-fData(gset)[fData(gset)$Sequence!="",]
+fData(gset)<-fData(gset)[fData(gset)$Species.Scientific.Name=="Homo sapiens",]
+rows_to_keep<-rownames(fData(gset))
+gset<-gset[rows_to_keep,]
+
 fl <- as.factor(sml)
 gset$description <- fl
 design <- model.matrix(~ description + 0, gset)
@@ -77,6 +88,5 @@ probe_boxplot <- function(myrow){
 #probe_boxplot("characteristics_ch1.1","SNORD123_st")
 probe_boxplot("SNORD123_st")
 probe_boxplot("hsa-miR-378c_st")
-
 
 
